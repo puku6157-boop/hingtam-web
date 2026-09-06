@@ -58,17 +58,22 @@ header.site {
 }
 
 header.site img {
-  /* 37px, not 30px -- the same +22% size bump already applied across the
-     app's own header lockups, so this page doesn't look like the one place
-     that missed it. */
-  width: 37px;
-  height: 37px;
+  /* 29px, matching DocHeader -- the app's own small top-bar-with-back-
+     button component used for its Privacy/Terms/Guidelines/Safety pages.
+     That's this page's real equivalent (a small nav strip above a legal
+     document), not the much bigger Swipe Deck branding header -- an
+     earlier pass here mistakenly scaled up from this site's own old
+     30px instead of matching that, overshooting to 37px. */
+  width: 29px;
+  height: 29px;
 }
 
 header.site .wordmark {
   font-family: 'Inter Tight', 'Inter', sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  /* 18px, matching DocHeader's text-lg, for the same reason as the logo
+     size above. */
+  font-size: 18px;
   color: var(--color-accent);
 }
 
