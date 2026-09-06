@@ -49,14 +49,20 @@ header.site {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  /* 4px, not 10px -- same tighter-gap treatment the app's own header
+     lockups (Swipe Deck, Sign In, Onboarding, in-app legal pages) already
+     use, so the logo and wordmark read as one lockup here too. */
+  gap: 4px;
   padding: 28px 24px 8px;
   text-decoration: none;
 }
 
 header.site img {
-  width: 30px;
-  height: 30px;
+  /* 37px, not 30px -- the same +22% size bump already applied across the
+     app's own header lockups, so this page doesn't look like the one place
+     that missed it. */
+  width: 37px;
+  height: 37px;
 }
 
 header.site .wordmark {
