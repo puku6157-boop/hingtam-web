@@ -198,8 +198,45 @@ footer.site a {
    it. Mobile is untouched below this breakpoint: no card, no wash, exactly
    the layout it's always had. */
 @media (min-width: 860px) {
+  :root {
+    /* Space between the screen edge and the white card: 302px is about 8cm
+       on a typical monitor, but it shrinks on narrower windows (16% of the
+       width) so the card never gets squeezed too thin. */
+    --edge-gap: min(302px, 16vw);
+  }
+
   body {
     background: #f6f4fa;
+  }
+
+  /* The logo lockup is sized for a phone header; on a big screen it looked
+     small above the wide card. Scaled up together (same 44:24 ratio as on
+     mobile) so it still reads as one lockup. */
+  /* Pinned to the top-left, lined up with where the card's text starts (the
+     card's left edge plus its 56px inner padding). The link wrapper is what
+     sticks, with the page wash behind it so text scrolling underneath
+     doesn't show through the logo. */
+  a.site-link {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f6f4fa;
+  }
+
+  header.site {
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 20px 24px 12px calc(var(--edge-gap) + 56px);
+  }
+
+  header.site img {
+    width: 96px;
+    height: 96px;
+  }
+
+  header.site .wordmark {
+    font-size: 54px;
   }
 
   .wrap {
@@ -212,8 +249,101 @@ footer.site a {
   }
 }
 
+/* The landing page has almost no text, so the 720px reading-column card left
+   it looking small and lost on a monitor. On desktop only, give it a wider,
+   taller card with the two document links side by side. The Privacy and Terms
+   pages keep the narrow column, which is right for long reading. */
+@media (min-width: 860px) {
+  /* The page fills the screen height: the card stretches to take whatever is
+     left between the logo and the footer, and sits --edge-gap (about 5cm on a large screen) in
+     from the left and right edges. */
+  body.home-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wrap.home {
+    flex: 1;
+    max-width: none;
+    margin: 16px var(--edge-gap) 0;
+    padding: 72px 56px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .wrap.home .home-lead {
+    font-size: 24px;
+    margin-bottom: 56px;
+  }
+
+  .wrap.home .home-links {
+    flex-direction: row;
+    gap: 28px;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .wrap.home .home-links a {
+    flex: 1;
+    padding: 56px 32px;
+    font-size: 26px;
+    border-radius: 20px;
+  }
+
+  .wrap.home .home-links a span {
+    font-size: 17px;
+    margin-top: 10px;
+  }
+
+  .wrap.home ~ footer.site {
+    max-width: none;
+    width: calc(100% - 2 * var(--edge-gap));
+    margin: 24px var(--edge-gap) 0;
+    padding-bottom: 28px;
+  }
+}
+
+/* Privacy and Terms: the same screen-wide card as the landing page (--edge-gap in
+   from each edge), with the text spread across the whole card. Lines this
+   long are harder to read, so the type is a little larger than on mobile to
+   compensate. */
+@media (min-width: 860px) {
+  .wrap:not(.home) {
+    max-width: none;
+    margin: 16px var(--edge-gap) 0;
+    padding: 56px 56px 72px;
+    font-size: 18px;
+  }
+
+  .wrap:not(.home) h1 {
+    font-size: 38px;
+  }
+
+  .wrap:not(.home) h2 {
+    font-size: 22px;
+  }
+
+  .wrap:not(.home) .banner,
+  .wrap:not(.home) .updated {
+    font-size: 15px;
+  }
+
+  footer.site {
+    max-width: none;
+    margin: 32px var(--edge-gap) 0;
+    padding-bottom: 28px;
+  }
+}
+
 @media (min-width: 860px) and (prefers-color-scheme: dark) {
   body {
+    background: #0a0a10;
+  }
+
+  a.site-link {
     background: #0a0a10;
   }
 }
