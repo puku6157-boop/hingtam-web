@@ -353,7 +353,7 @@ h1.doc{font-size:clamp(34px,5vw,54px);font-weight:800}
 .contact{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
 .contact code{background:var(--accent-soft);padding:9px 14px;border-radius:12px;font:600 15px var(--body)}
 .noscript-note{background:var(--warn-bg);border-radius:14px;padding:12px 16px;margin-top:14px}
-@media (max-width:860px){.tl,.walk,.hero-grid,.how,.play{grid-template-columns:1fr}.how .phone-wrap,.play .phone-wrap{justify-self:center}section.block{padding-block:44px 6px}}
+@media (max-width:860px){.hero-copy{display:contents}.hero-top{order:1}.hero .stage{order:2}.hero-bottom{order:3}.hero-grid{gap:28px}.tl,.walk,.hero-grid,.how,.play{grid-template-columns:1fr}.how .phone-wrap,.play .phone-wrap{justify-self:center}section.block{padding-block:44px 6px}}
 
 /* about */
 .about{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:center;padding-block:56px 40px}
