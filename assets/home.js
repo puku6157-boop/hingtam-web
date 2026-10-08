@@ -9,7 +9,7 @@
     var el = document.createElement('div');
     el.className = 'card-p';
     el.style.backgroundImage = 'url(' + p.image + ')';
-    el.innerHTML = '<div class="stamp like">LIKE</div><div class="stamp pass">PASS</div><div class="info"><div class="nm">' + p.name + '<span>, ' + p.age + '</span></div><div class="meta">' + p.distance + '</div><div class="chips">' + p.chips.map(function (x) { return '<span class="chip">' + x + '</span>'; }).join('') + '</div></div>';
+    el.innerHTML = '<div class="stamp like">LIKE</div><div class="stamp pass">PASS</div><div class="stamp super">SUPER LIKE</div><div class="info"><div class="nm">' + p.name + '<span>, ' + p.age + '</span></div><div class="meta">' + p.distance + '</div><div class="chips">' + p.chips.map(function (x) { return '<span class="chip">' + x + '</span>'; }).join('') + '</div></div>';
     return el;
   }
   function render() {
@@ -24,7 +24,8 @@
   function fling(el, dir) {
     if (busy) return; busy = true;
     el.style.transition = 'transform .35s ease,opacity .35s';
-    el.style.transform = 'translate(' + (dir * 420) + 'px,-30px) rotate(' + (dir * 22) + 'deg)'; el.style.opacity = '0';
+    el.style.transform = dir === 0 ? 'translate(0,-560px) scale(.92)' : 'translate(' + (dir * 420) + 'px,-30px) rotate(' + (dir * 22) + 'deg)';
+    el.style.opacity = '0';
     setTimeout(function () { idx = (idx + 1) % people.length; busy = false; render(); }, 330);
   }
   function attach(el) {
@@ -47,11 +48,11 @@
   function btn(id, dir) {
     $(id).addEventListener('click', function () {
       var el = top(); if (!el) return;
-      el.querySelector(dir > 0 ? '.stamp.like' : '.stamp.pass').style.opacity = 1;
+      el.querySelector(dir === 0 ? '.stamp.super' : dir > 0 ? '.stamp.like' : '.stamp.pass').style.opacity = 1;
       setTimeout(function () { fling(el, dir); }, 120);
     });
   }
-  btn('passBtn', -1); btn('likeBtn', 1); btn('starBtn', 1);
+  btn('passBtn', -1); btn('likeBtn', 1); btn('starBtn', 0);
   render();
 
   /* ---------- feature tour: plays by itself, pauses when touched ---------- */

@@ -117,7 +117,7 @@ h1.hero-h em{display:block;font-style:normal;color:var(--accent);font-size:clamp
 .card-p{position:absolute;inset:0;background-size:cover;background-position:center top;cursor:grab;user-select:none;touch-action:none;will-change:transform}
 .card-p.dragging{cursor:grabbing}
 .card-p::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(10,8,18,.92) 0%,rgba(10,8,18,.55) 28%,transparent 55%)}
-.card-p .info{position:absolute;left:16px;right:16px;bottom:78px;z-index:2;color:#fff}
+.card-p .info{position:absolute;left:16px;right:16px;bottom:84px;z-index:2;color:#fff}
 .card-p .nm{font:700 25px var(--display)}
 .card-p .nm span{font-weight:500}
 .card-p .meta{font-size:13px;opacity:.9;margin-top:2px}
@@ -126,9 +126,10 @@ h1.hero-h em{display:block;font-style:normal;color:var(--accent);font-size:clamp
 .stamp{position:absolute;top:70px;z-index:3;padding:4px 12px;border:3px solid;border-radius:10px;font:800 24px var(--display);letter-spacing:.06em;opacity:0;transform:rotate(-12deg)}
 .stamp.like{left:16px;color:#37d69b;border-color:#37d69b}
 .stamp.pass{right:16px;color:#ff7a8a;border-color:#ff7a8a;transform:rotate(12deg)}
-.actions{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:16px;z-index:4}
-.act{width:50px;height:50px;border-radius:50%;border:0;background:rgba(255,255,255,.95);color:#111;font-size:22px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35);display:grid;place-items:center}
-.act.like{color:var(--accent)}.act.star{color:#e0a800}
+.actions{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:20px;z-index:20}
+.act{width:56px;height:56px;border-radius:50%;border:1px solid #E9E1F7;background:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);display:grid;place-items:center;padding:0;transition:transform .12s}
+.act:active{transform:scale(.88)}
+.stamp.super{left:50%;right:auto;top:38%;color:#fff;border-color:#d9b8ff;background:rgba(107,47,179,.88);white-space:nowrap;font-size:22px;transform:translateX(-50%) rotate(-8deg)}
 .sample{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
 
 /* screenshots row */
