@@ -21,26 +21,31 @@
       if (o === 0) attach(el);
     });
   }
+  var FLING_MS = 800; // how long a card takes to leave the screen (slow enough to watch)
   function fling(el, dir) {
     if (busy) return; busy = true;
-    el.style.transition = 'transform .35s ease,opacity .35s';
+    el.style.transition = 'transform ' + FLING_MS + 'ms cubic-bezier(.25,.6,.35,1),opacity ' + FLING_MS + 'ms ease-in';
     el.style.transform = dir === 0 ? 'translate(0,-560px) scale(.92)' : 'translate(' + (dir * 420) + 'px,-30px) rotate(' + (dir * 22) + 'deg)';
     el.style.opacity = '0';
-    setTimeout(function () { idx = (idx + 1) % people.length; busy = false; render(); }, 330);
+    setTimeout(function () { idx = (idx + 1) % people.length; busy = false; render(); }, FLING_MS);
   }
   function attach(el) {
-    var sx = 0, dx = 0, drag = false, like = el.querySelector('.stamp.like'), pass = el.querySelector('.stamp.pass');
-    el.addEventListener('pointerdown', function (e) { drag = true; sx = e.clientX; el.classList.add('dragging'); el.style.transition = 'none'; el.setPointerCapture(e.pointerId); });
+    var sx = 0, sy = 0, dx = 0, dy = 0, drag = false, like = el.querySelector('.stamp.like'), pass = el.querySelector('.stamp.pass'), sup = el.querySelector('.stamp.super');
+    function clamp(v) { return Math.max(0, Math.min(1, v)); }
+    el.addEventListener('pointerdown', function (e) { drag = true; sx = e.clientX; sy = e.clientY; dx = 0; dy = 0; el.classList.add('dragging'); el.style.transition = 'none'; el.setPointerCapture(e.pointerId); });
     el.addEventListener('pointermove', function (e) {
-      if (!drag) return; dx = e.clientX - sx;
-      el.style.transform = 'translate(' + dx + 'px,0) rotate(' + (dx / 18) + 'deg)';
-      like.style.opacity = Math.max(0, Math.min(1, dx / 90)); pass.style.opacity = Math.max(0, Math.min(1, -dx / 90));
+      if (!drag) return; dx = e.clientX - sx; dy = Math.min(0, e.clientY - sy); // dragging up is Super Like; down does nothing
+      var up = -dy > Math.abs(dx);
+      el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (up ? 0 : dx / 18) + 'deg)';
+      sup.style.opacity = up ? clamp(-dy / 90) : 0;
+      like.style.opacity = up ? 0 : clamp(dx / 90); pass.style.opacity = up ? 0 : clamp(-dx / 90);
     });
     function end() {
       if (!drag) return; drag = false; el.classList.remove('dragging');
-      if (Math.abs(dx) > 90) fling(el, dx > 0 ? 1 : -1);
-      else { el.style.transition = 'transform .3s'; el.style.transform = ''; like.style.opacity = 0; pass.style.opacity = 0; }
-      dx = 0;
+      if (-dy > 90 && -dy > Math.abs(dx)) fling(el, 0);
+      else if (Math.abs(dx) > 90) fling(el, dx > 0 ? 1 : -1);
+      else { el.style.transition = 'transform .3s'; el.style.transform = ''; like.style.opacity = 0; pass.style.opacity = 0; sup.style.opacity = 0; }
+      dx = 0; dy = 0;
     }
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
   }
@@ -49,7 +54,7 @@
     $(id).addEventListener('click', function () {
       var el = top(); if (!el) return;
       el.querySelector(dir === 0 ? '.stamp.super' : dir > 0 ? '.stamp.like' : '.stamp.pass').style.opacity = 1;
-      setTimeout(function () { fling(el, dir); }, 120);
+      setTimeout(function () { fling(el, dir); }, 250);
     });
   }
   btn('passBtn', -1); btn('likeBtn', 1); btn('starBtn', 0);
