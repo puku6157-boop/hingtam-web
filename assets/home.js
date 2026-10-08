@@ -1,34 +1,7 @@
-// Home page: swipe demo, feature tour, privacy playground, screenshot row, launch-list form.
+// Home page: swipe demo, feature tour, privacy playground, screenshot row.
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var cfg = {};
-  try { cfg = JSON.parse($('hg-config').textContent); } catch (e) {}
   var data = JSON.parse($('home-data').textContent);
-
-  /* ---------- launch list ---------- */
-  // Honest by design: it only says "Thank you" if the server really saved the email.
-  function wire(formId, inputId, msgId) {
-    var form = $(formId); if (!form) return;
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var msg = $(msgId), email = $(inputId).value.trim(), trap = form.querySelector('[name="website"]');
-      msg.className = 'msg';
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.classList.add('err'); msg.textContent = 'Please enter a valid email address.'; return; }
-      if (trap && trap.value) return; // a bot filled the hidden field
-      if (!cfg.waitlistEndpoint) { msg.classList.add('err'); msg.textContent = 'The launch list is not open yet. Please check back soon.'; return; }
-      var btn = form.querySelector('button[type="submit"]'); btn.disabled = true;
-      fetch(cfg.waitlistEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) })
-        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok && j.ok !== false, j: j }; }); })
-        .then(function (res) {
-          btn.disabled = false;
-          if (res.ok) { msg.classList.add('ok'); msg.textContent = 'Thank you. We will email you once, on launch day.'; form.reset(); }
-          else { msg.classList.add('err'); msg.textContent = 'Sorry, that did not work. Please try again in a moment.'; }
-        })
-        .catch(function () { btn.disabled = false; msg.classList.add('err'); msg.textContent = 'Sorry, that did not work. Please check your connection and try again.'; });
-    });
-  }
-  wire('waitTop', 'emailTop', 'msgTop');
-  wire('waitBot', 'emailBot', 'msgBot');
 
   /* ---------- swipe deck ---------- */
   var people = data.samples, deck = $('deck'), idx = 0, busy = false;
