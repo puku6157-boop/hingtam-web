@@ -74,8 +74,8 @@ nav.main a:hover,nav.main a[aria-current="page"]{background:var(--accent-soft)}
   .bar{position:relative}
   .tools{margin-left:auto}
 }
-.weave{height:16px;background:repeating-linear-gradient(90deg,var(--accent) 0 28px,var(--gold) 28px 40px,var(--rose) 40px 68px,var(--deep) 68px 74px,var(--gold) 74px 86px);border-block:1px solid var(--line)}
-.weave.thin{height:10px}
+.weave{--gut:clamp(20px,4vw,56px);height:2px;width:calc(100% - 2*var(--gut));max-width:calc(1560px - 2*var(--gut));margin-inline:auto;border-radius:2px;background:linear-gradient(90deg,transparent,var(--accent) 14%,var(--accent) 86%,transparent)}
+.weave.thin{height:1px}
 footer.site{border-top:1px solid var(--line);margin-top:80px;padding-block:44px 56px;color:var(--muted);font-size:15px}
 .fcols{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:28px}
 .fcols h4{margin:0 0 10px;color:var(--ink);font:700 15px var(--display)}
