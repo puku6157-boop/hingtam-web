@@ -30,22 +30,21 @@
     setTimeout(function () { idx = (idx + 1) % people.length; busy = false; render(); }, FLING_MS);
   }
   function attach(el) {
-    var sx = 0, sy = 0, dx = 0, dy = 0, drag = false, like = el.querySelector('.stamp.like'), pass = el.querySelector('.stamp.pass'), sup = el.querySelector('.stamp.super');
+    // Left/right swipe only. Vertical touches are left to the browser (touch-action: pan-y on the card),
+    // so a finger on the card can still scroll the page; the browser then cancels the drag and the card springs back.
+    var sx = 0, dx = 0, drag = false, like = el.querySelector('.stamp.like'), pass = el.querySelector('.stamp.pass');
     function clamp(v) { return Math.max(0, Math.min(1, v)); }
-    el.addEventListener('pointerdown', function (e) { drag = true; sx = e.clientX; sy = e.clientY; dx = 0; dy = 0; el.classList.add('dragging'); el.style.transition = 'none'; el.setPointerCapture(e.pointerId); });
+    el.addEventListener('pointerdown', function (e) { drag = true; sx = e.clientX; dx = 0; el.classList.add('dragging'); el.style.transition = 'none'; el.setPointerCapture(e.pointerId); });
     el.addEventListener('pointermove', function (e) {
-      if (!drag) return; dx = e.clientX - sx; dy = Math.min(0, e.clientY - sy); // dragging up is Super Like; down does nothing
-      var up = -dy > Math.abs(dx);
-      el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (up ? 0 : dx / 18) + 'deg)';
-      sup.style.opacity = up ? clamp(-dy / 90) : 0;
-      like.style.opacity = up ? 0 : clamp(dx / 90); pass.style.opacity = up ? 0 : clamp(-dx / 90);
+      if (!drag) return; dx = e.clientX - sx;
+      el.style.transform = 'translate(' + dx + 'px,0) rotate(' + (dx / 18) + 'deg)';
+      like.style.opacity = clamp(dx / 90); pass.style.opacity = clamp(-dx / 90);
     });
     function end() {
       if (!drag) return; drag = false; el.classList.remove('dragging');
-      if (-dy > 90 && -dy > Math.abs(dx)) fling(el, 0);
-      else if (Math.abs(dx) > 90) fling(el, dx > 0 ? 1 : -1);
-      else { el.style.transition = 'transform .3s'; el.style.transform = ''; like.style.opacity = 0; pass.style.opacity = 0; sup.style.opacity = 0; }
-      dx = 0; dy = 0;
+      if (Math.abs(dx) > 90) fling(el, dx > 0 ? 1 : -1);
+      else { el.style.transition = 'transform .3s'; el.style.transform = ''; like.style.opacity = 0; pass.style.opacity = 0; }
+      dx = 0;
     }
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
   }
