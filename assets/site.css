@@ -135,16 +135,38 @@ h1.hero-h em{display:block;font-style:normal;color:var(--accent);font-size:clamp
 .stamp.super{left:50%;right:auto;top:38%;color:#fff;border-color:#d9b8ff;background:rgba(107,47,179,.88);white-space:nowrap;font-size:22px;transform:translateX(-50%) rotate(-8deg)}
 .sample{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
 
-/* screenshots row */
-.shots{position:relative}
-.shots-track{display:flex;gap:26px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 4px 22px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-.shot{flex:0 0 auto;width:min(340px,78vw);aspect-ratio:4/5;margin:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;scroll-snap-align:center;text-align:center;border:1.5px solid var(--line);border-radius:28px;background:linear-gradient(165deg,var(--accent-soft),var(--surface) 72%)}
-.shot figcaption{flex:none;height:76px;padding:24px 22px 0;font:700 20px var(--display);line-height:1.2;text-wrap:balance}
-.shot .frame{flex:none;width:80%;border-radius:34px 34px 0 0;background:var(--deep);padding:8px 8px 0;box-shadow:var(--shadow)}
-.shot img{display:block;width:100%;aspect-ratio:9/19.5;object-fit:cover;border-radius:27px 27px 0 0;background:var(--line)}
-.shots-nav{display:flex;gap:10px;margin-top:6px}
-.shots-nav button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-size:20px;cursor:pointer}
-.shots-nav button:hover{border-color:var(--accent);color:var(--link)}
+/* match scene: the app's match moment, moved by home.js */
+.match{align-items:center}
+.mpoints{display:grid;gap:10px;list-style:none;padding:0;margin-top:22px;color:var(--muted);font-size:16px;max-width:30em}
+.mpoints li{padding-left:26px;position:relative}
+.mpoints li::before{content:"\2713";position:absolute;left:0;color:var(--accent);font-weight:700}
+.mscene{container-type:size;background:#0C0A14;--cw:38cqw;--ch:calc(var(--cw)*1.36);--cy:calc(48px + var(--ch)/2);user-select:none}
+.mscene .m-bg{position:absolute;inset:0;background:linear-gradient(#4B1D8F,#24123F 45%,#0C0A14)}
+.mscene .m-defs{position:absolute;width:0;height:0}
+.mscene .m-at{position:absolute;left:50%;top:var(--cy);width:0;height:0}
+.m-flash{position:absolute;left:-38cqw;top:-38cqw;width:76cqw;height:76cqw;border-radius:50%;opacity:0;background:radial-gradient(circle,#fff 0,rgba(255,224,170,.85) 20%,rgba(180,110,255,.4) 48%,rgba(180,110,255,0) 70%)}
+.m-ring{position:absolute;left:calc(var(--cw)/-2);top:calc(var(--cw)/-2);width:var(--cw);height:var(--cw);border-radius:50%;border:2px solid rgba(255,255,255,.85);opacity:0}
+.m-card{position:absolute;left:calc(var(--cw)/-2);top:calc(var(--ch)/-2);width:var(--cw);height:var(--ch);border-radius:14px;border:2px solid #fff;overflow:hidden;background:#2B2540;box-shadow:0 10px 22px rgba(0,0,0,.5)}
+.m-card img{display:block;width:100%;height:100%;object-fit:cover}
+.m-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;background:linear-gradient(transparent,rgba(10,6,20,.88))}
+.m-card span{position:absolute;left:7px;right:7px;bottom:6px;z-index:2;color:#fff;font:700 3.4cqw var(--display);white-space:nowrap}
+.m-l{z-index:2;transform:translate(calc(var(--cw)*-.4),10px) rotate(-9deg)}
+.m-r{z-index:3;transform:translate(calc(var(--cw)*.4),-8px) rotate(8deg)}
+.m-r span{text-align:right}
+.m-heart{position:absolute;z-index:5;left:-15px;top:calc(var(--ch)/2 - 10px);width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 5px 12px rgba(0,0,0,.4)}
+.m-petals{pointer-events:none;overflow:visible}
+.m-p{position:absolute;left:0;top:0;will-change:transform,opacity}
+.m-p svg{display:block}
+.m-text{position:absolute;left:6cqw;right:6cqw;top:calc(var(--cy) + var(--ch)/2 + 28px);text-align:center;color:#fff}
+.m-text h3{font:700 9.2cqw/1.1 var(--display)}
+.m-text p{font-size:4.2cqw;opacity:.8;margin-top:6px}
+.m-starters{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:14px}
+.m-starters span{font:600 3.5cqw/1.25 var(--body);padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1)}
+.m-bottom{position:absolute;left:6cqw;right:6cqw;bottom:12px;text-align:center}
+.m-send{display:grid;place-items:center;height:44px;border-radius:999px;background:var(--accent);color:#fff;font:600 4.4cqw var(--body);box-shadow:0 6px 16px rgba(149,66,238,.55)}
+.m-keep{padding:10px 0 2px;color:rgba(255,255,255,.8);font:600 4cqw var(--body)}
+/* before the scene is played, everything waits out of sight; home.js removes m-armed when it finishes */
+.mscene.m-armed .m-card,.mscene.m-armed .m-heart,.mscene.m-armed .m-bg,.mscene.m-armed .m-text h3,.mscene.m-armed .m-text p,.mscene.m-armed .m-starters span,.mscene.m-armed .m-bottom{opacity:0}
 
 /* tour */
 .how{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center}
