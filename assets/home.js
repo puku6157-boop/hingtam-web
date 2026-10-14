@@ -7,6 +7,56 @@
   var people = data.samples, deck = $('deck'), idx = 0, busy = false;
   // Load every sample photo up front, so the next card never appears half-loaded after a swipe.
   people.forEach(function (p) { new Image().src = p.image; });
+
+  /* ---------- petal burst (the app's own): peach-blossom petals and gold sparks flung out from a point ----------
+     layer: a zero-size, absolutely positioned element sitting on the spot the burst starts from.
+     k: size scale (the app's numbers are for a 390px-wide phone). o: how many, how far, how high, how far they fall. */
+  function petalBurst(layer, k, o) {
+    var rnd = function (a, b) { return a + Math.random() * (b - a); }, list = [], i, total = o.petals + o.sparks;
+    var PETAL = 'M12 12 C7.5 10.3 6.5 5.7 8.9 2.5 C9.9 1.3 11 1.1 12 2.3 C13 1.1 14.1 1.3 15.1 2.5 C17.5 5.7 16.5 10.3 12 12 Z';
+    var SPARK = 'M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5Z';
+    for (i = 0; i < total; i++) {
+      var petal = i < o.petals, a = rnd(0, Math.PI * 2), d = (petal ? rnd(0.4, 1) : rnd(0.5, 1.15)) * o.spread * k;
+      var size = (petal ? rnd(15, 27) : rnd(9, 17)) * k * 1.15;
+      var el = document.createElement('div'); el.className = 'm-p';
+      el.innerHTML = petal
+        ? '<svg width="' + size + '" height="' + size * 1.08 + '" viewBox="6.4 1 11.2 11.2" aria-hidden="true"><path d="' + PETAL + '" fill="url(#mPetalGrad)"/></svg>'
+        : '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + SPARK + '" fill="#F3E3BE"/></svg>';
+      layer.appendChild(el);
+      list.push({ el: el, petal: petal, size: size, h: petal ? size * 1.08 : size, dx: Math.cos(a) * d, dy: Math.sin(a) * d - o.lift * (petal ? 1 : 0.5) * k,
+        fall: o.fall * (petal ? 1 : 0.3) * k, r0: petal ? rnd(0, 6.28) : 0, vr: petal ? rnd(-4, 4) : 0, phase: rnd(0, 6.28), freq: rnd(5, 9), life: petal ? rnd(1900, 3100) : rnd(650, 1050) });
+    }
+    var start = performance.now();
+    (function step(now) {
+      var t = now - start, alive = false;
+      list.forEach(function (p) {
+        if (!p.el.isConnected) return; // the layer was cleared (scene replayed): stop quietly
+        var u = Math.min(1, t / p.life), e = 1 - (1 - u) * (1 - u);
+        if (u >= 1) { p.el.remove(); return; }
+        alive = true;
+        var flutter = p.petal ? Math.abs(Math.cos(u * p.freq + p.phase)) * 0.75 + 0.25 : 1, shrink = p.petal ? 1 : 1 - u * 0.6;
+        p.el.style.opacity = u < 0.7 ? 1 : Math.max(0, (1 - u) / 0.3);
+        p.el.style.transform = 'translate(' + (p.dx * e - p.size / 2) + 'px,' + (p.dy * e + p.fall * u * u - p.h / 2) + 'px) rotate(' + (p.r0 + p.vr * u) + 'rad) scale(' + flutter * shrink + ',' + shrink + ')';
+      });
+      if (alive) requestAnimationFrame(step);
+    })(start);
+    return list;
+  }
+  // Super Like on the swipe demo: a puff of petals from the blossom button, as in the app.
+  var deckLayer = null;
+  function deckBurst() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var screen = deck.parentNode, sr = screen.getBoundingClientRect(), br = $('starBtn').getBoundingClientRect();
+    if (!deckLayer) {
+      deckLayer = document.createElement('div');
+      deckLayer.setAttribute('aria-hidden', 'true');
+      deckLayer.style.cssText = 'position:absolute;width:0;height:0;z-index:30;pointer-events:none';
+      screen.appendChild(deckLayer);
+    }
+    deckLayer.style.left = (br.left + br.width / 2 - sr.left) + 'px';
+    deckLayer.style.top = (br.top + br.height / 2 - sr.top) + 'px';
+    petalBurst(deckLayer, sr.width / 390, { petals: 16, sparks: 10, spread: 150, lift: 110, fall: 90 });
+  }
   function mk(p) {
     var el = document.createElement('div');
     el.className = 'card-p';
@@ -56,6 +106,7 @@
     $(id).addEventListener('click', function () {
       var el = top(); if (!el) return;
       el.querySelector(dir === 0 ? '.stamp.super' : dir > 0 ? '.stamp.like' : '.stamp.pass').style.opacity = 1;
+      if (dir === 0) deckBurst();
       setTimeout(function () { fling(el, dir); }, 250);
     });
   }
@@ -140,39 +191,12 @@
       el.style.transform = 'translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + sc + ')';
     }
 
-    function makeBurst(k) { // petals and gold sparks flung out from where the photos meet
-      var rnd = function (a, b) { return a + Math.random() * (b - a); }, list = [], i;
-      var PETAL = 'M12 12 C7.5 10.3 6.5 5.7 8.9 2.5 C9.9 1.3 11 1.1 12 2.3 C13 1.1 14.1 1.3 15.1 2.5 C17.5 5.7 16.5 10.3 12 12 Z';
-      var SPARK = 'M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5Z';
-      for (i = 0; i < 48; i++) {
-        var petal = i < 30, a = rnd(0, Math.PI * 2), d = (petal ? rnd(0.4, 1) : rnd(0.5, 1.15)) * 210 * k;
-        var size = (petal ? rnd(15, 27) : rnd(9, 17)) * k * 1.15;
-        var el = document.createElement('div'); el.className = 'm-p';
-        el.innerHTML = petal
-          ? '<svg width="' + size + '" height="' + size * 1.08 + '" viewBox="6.4 1 11.2 11.2" aria-hidden="true"><path d="' + PETAL + '" fill="url(#mPetalGrad)"/></svg>'
-          : '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + SPARK + '" fill="#F3E3BE"/></svg>';
-        petalsBox.appendChild(el);
-        list.push({ el: el, petal: petal, size: size, h: petal ? size * 1.08 : size, dx: Math.cos(a) * d, dy: Math.sin(a) * d - (petal ? 50 : 25) * k,
-          fall: (petal ? 120 : 36) * k, r0: petal ? rnd(0, 6.28) : 0, vr: petal ? rnd(-4, 4) : 0, phase: rnd(0, 6.28), freq: rnd(5, 9), life: petal ? rnd(1900, 3100) : rnd(650, 1050) });
-      }
-      return list;
-    }
-    function stepBurst(t) {
-      if (!burst) return;
-      burst.forEach(function (p) {
-        var u = clamp((t - HIT) / p.life), e = easeOut(u);
-        var flutter = p.petal ? Math.abs(Math.cos(u * p.freq + p.phase)) * 0.75 + 0.25 : 1, shrink = p.petal ? 1 : 1 - u * 0.6;
-        p.el.style.opacity = u < 0.7 ? 1 : Math.max(0, (1 - u) / 0.3);
-        p.el.style.transform = 'translate(' + (p.dx * e - p.size / 2) + 'px,' + (p.dy * e + p.fall * u * u - p.h / 2) + 'px) rotate(' + (p.r0 + p.vr * u) + 'rad) scale(' + flutter * shrink + ',' + shrink + ')';
-      });
-    }
-
     function frame(t) {
       var W = scene.clientWidth, cw = cardL.offsetWidth, off = W * 0.62;
       pose(cardL, { x: -off, y: 46, r: -26 }, { x: -cw * 0.2, y: 0, r: -3 }, { x: -cw * 0.4, y: 10, r: -9 }, START, t);
       pose(cardR, { x: off, y: -46, r: 26 }, { x: cw * 0.2, y: 0, r: 3 }, { x: cw * 0.4, y: -8, r: 8 }, START + 20, t);
       bg.style.opacity = clamp(t / 380);
-      if (t >= HIT && !burst) burst = makeBurst(W / 390);
+      if (t >= HIT && !burst) burst = petalBurst(petalsBox, W / 390, { petals: 30, sparks: 18, spread: 210, lift: 50, fall: 120 });
       var f = easeOut(clamp((t - HIT) / 650)), g = easeOut(clamp((t - HIT) / 800));
       flash.style.opacity = t < HIT ? 0 : 0.95 * (1 - f);
       flash.style.transform = 'scale(' + (0.25 + 1.25 * f) + ')';
@@ -184,7 +208,6 @@
         var v = clamp((t - TEXT - REVEAL_AT[i]) / 500), e = 1 - Math.pow(1 - v, 3);
         el.style.opacity = e; el.style.transform = 'translateY(' + (1 - e) * 14 + 'px)';
       });
-      stepBurst(t);
     }
 
     function finish() { // hand back to the stylesheet's resting layout, so a resized window stays correct
