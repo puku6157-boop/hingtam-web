@@ -132,7 +132,7 @@ h1.hero-h em{display:block;font-style:normal;color:var(--accent);font-size:clamp
 .actions{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:20px;z-index:20}
 .act{width:56px;height:56px;border-radius:50%;border:1px solid #E9E1F7;background:#fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);display:grid;place-items:center;padding:0;transition:transform .12s}
 .act:active{transform:scale(.88)}
-.stamp.super{left:50%;right:auto;top:38%;color:#fff;border-color:#d9b8ff;background:rgba(107,47,179,.88);white-space:nowrap;font-size:22px;transform:translateX(-50%) rotate(-8deg)}
+.stamp.super{left:50%;right:auto;top:70px;color:#fff;border-color:#d9b8ff;background:rgba(107,47,179,.88);white-space:nowrap;font-size:22px;transform:translateX(-50%) rotate(-8deg)}
 .sample{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
 
 /* match scene: the app's match moment, moved by home.js */

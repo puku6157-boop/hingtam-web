@@ -4,7 +4,7 @@
   var data = JSON.parse($('home-data').textContent);
 
   /* ---------- swipe deck ---------- */
-  var people = data.samples, deck = $('deck'), idx = 0, busy = false;
+  var people = data.samples, deck = $('deck'), idx = 0, busy = false, tapping = false;
   // Load every sample photo up front, so the next card never appears half-loaded after a swipe.
   people.forEach(function (p) { new Image().src = p.image; });
 
@@ -74,13 +74,15 @@
       if (o === 0) attach(el);
     });
   }
-  var FLING_MS = 800; // how long a card takes to leave the screen (slow enough to watch)
-  function fling(el, dir) {
+  var FLING_MS = 800; // how long a card takes to leave the screen after a finger lets go
+  var BTN_FLING_MS = 1300, BTN_WAIT_MS = 500; // the three buttons: a longer pause on the stamp, then a slower exit
+  function fling(el, dir, ms) {
     if (busy) return; busy = true;
-    el.style.transition = 'transform ' + FLING_MS + 'ms cubic-bezier(.25,.6,.35,1),opacity ' + FLING_MS + 'ms ease-in';
+    var dur = ms || FLING_MS;
+    el.style.transition = 'transform ' + dur + 'ms cubic-bezier(.25,.6,.35,1),opacity ' + dur + 'ms ease-in';
     el.style.transform = dir === 0 ? 'translate(0,-560px) scale(.92)' : 'translate(' + (dir * 420) + 'px,-30px) rotate(' + (dir * 22) + 'deg)';
     el.style.opacity = '0';
-    setTimeout(function () { idx = (idx + 1) % people.length; busy = false; render(); }, FLING_MS);
+    setTimeout(function () { idx = (idx + 1) % people.length; busy = false; render(); }, dur);
   }
   function attach(el) {
     // Left/right swipe only. Vertical touches are left to the browser (touch-action: pan-y on the card),
@@ -104,10 +106,13 @@
   function top() { return deck.querySelector('.card-p[data-o="0"]'); }
   function btn(id, dir) {
     $(id).addEventListener('click', function () {
-      var el = top(); if (!el) return;
-      el.querySelector(dir === 0 ? '.stamp.super' : dir > 0 ? '.stamp.like' : '.stamp.pass').style.opacity = 1;
+      var el = top(); if (!el || busy || tapping) return; // one tap at a time, until the card has gone
+      tapping = true;
+      var stamp = el.querySelector(dir === 0 ? '.stamp.super' : dir > 0 ? '.stamp.like' : '.stamp.pass');
+      stamp.style.transition = 'opacity .3s'; // fades in, so it can be read before the card leaves
+      stamp.style.opacity = 1;
       if (dir === 0) deckBurst();
-      setTimeout(function () { fling(el, dir); }, 250);
+      setTimeout(function () { tapping = false; fling(el, dir, BTN_FLING_MS); }, BTN_WAIT_MS);
     });
   }
   btn('passBtn', -1); btn('likeBtn', 1); btn('starBtn', 0);
