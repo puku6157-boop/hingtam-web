@@ -5,6 +5,8 @@
 
   /* ---------- swipe deck ---------- */
   var people = data.samples, deck = $('deck'), idx = 0, busy = false;
+  // Load every sample photo up front, so the next card never appears half-loaded after a swipe.
+  people.forEach(function (p) { new Image().src = p.image; });
   function mk(p) {
     var el = document.createElement('div');
     el.className = 'card-p';
@@ -16,7 +18,8 @@
     deck.innerHTML = '';
     [2, 1, 0].forEach(function (o) {
       var el = mk(people[(idx + o) % people.length]);
-      el.style.transform = 'scale(' + (1 - o * 0.04) + ') translateY(' + (o * 10) + 'px)';
+      // Every card is full size and sits exactly under the top one (no scale or offset). A smaller card behind showed
+      // white screen around it while the top card flew away, then jumped to full size when it became the top card.
       el.style.zIndex = 10 - o; el.dataset.o = o; deck.appendChild(el);
       if (o === 0) attach(el);
     });
