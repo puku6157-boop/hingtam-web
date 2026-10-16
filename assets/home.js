@@ -136,7 +136,7 @@
   /* ---------- privacy playground ---------- */
   var pv = $('pv'), state = { age: true, active: true, hide: false };
   function paint() {
-    $('pvAge').textContent = state.age ? ', 27' : '';
+    $('pvAge').textContent = state.age ? ', 29' : '';
     pv.classList.toggle('active', state.active);
     pv.classList.toggle('hidden', state.hide);
   }
