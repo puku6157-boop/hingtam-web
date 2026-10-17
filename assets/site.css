@@ -16,7 +16,7 @@
   --accent:#9542EE; --accent-ink:#FFFFFF; --accent-soft:#F1E6FD; --link:#7A2FD0;
   --rose:#C97D8F; --gold:#E4CD9F; --deep:#101119; --good:#1F7A55; --good-bg:#E1F5EC;
   --bad:#C0394F; --bad-bg:#FBE4E8; --warn:#8A5A00; --warn-bg:#FFF1CF; --mark:#FFE066; --markink:#14181B;
-  --shadow:0 18px 50px rgba(60,20,110,.14);
+  --shadow:0 18px 50px rgba(60,20,110,.14); --phone-frame:linear-gradient(150deg,#4A4864 0%,#1E1D2C 26%,#0D0D15 52%,#2A2940 78%,#6A6886 100%); --phone-ring:0 0 0 1.5px #A99BD0,0 0 0 3.5px rgba(255,255,255,.85),0 0 0 4.5px rgba(120,96,180,.22),inset 0 0 0 1px rgba(255,255,255,.2); --phone-glow:0 3px 5px rgba(40,20,80,.22),0 26px 40px -14px rgba(60,20,110,.42),0 70px 100px -34px rgba(149,66,238,.42); --phone-key:#5C5A7A;
  --ap-ground:#F6F1FC; --ap-box:#FFFFFF; --ap-line:#CDBDE8; --ap-divider:#EAE3F4; --ap-eyebrow:#7A2FD0; --ap-ink:#14181B; --ap-muted:#4E5963;
   --ap-tagbg:#F6F0FE; --ap-tagline:#D3C0F2; --ap-taginks:#2A1450; --ap-promptbg:#FFF6F9; --ap-promptline:#EFC3D3; --ap-prompteyebrow:#A3174E;
   --ap-sheet:#FFFFFF; --ap-bubble:#F0ECF6; --ap-danger:#C0394F; --ap-shadow:0 1px 2px rgba(60,20,110,.10),0 12px 22px -14px rgba(60,20,110,.38);
