@@ -79,14 +79,5 @@
   $('copyMail').addEventListener('click', function () { copyText($('mailAddr').textContent, 'mailMsg'); });
 
   /* help numbers */
-  var rg = $('regs');
-  Object.keys(D.regions).forEach(function (k, i) {
-    var b = document.createElement('button'); b.className = 'reg'; b.textContent = k; b.setAttribute('aria-pressed', String(i === 0));
-    b.addEventListener('click', function () { rshow(k); }); rg.appendChild(b);
-  });
-  function rshow(k) {
-    [].slice.call(rg.children).forEach(function (b) { b.setAttribute('aria-pressed', String(b.textContent === k)); });
-    $('res').innerHTML = D.regions[k].map(function (r) { return '<div><b>' + esc(r[0]) + '</b><span class="num">' + esc(r[1]) + '</span>' + (r[2] ? '<small>' + esc(r[2]) + '</small>' : '') + '</div>'; }).join('');
-  }
-  rshow(Object.keys(D.regions)[0]);
+  $('res').innerHTML = D.help.map(function (r) { return '<div><b>' + esc(r[0]) + '</b><span class="num">' + esc(r[1]) + '</span>' + (r[2] ? '<small>' + esc(r[2]) + '</small>' : '') + '</div>'; }).join('');
 })();
