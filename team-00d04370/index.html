@@ -525,11 +525,12 @@
     }
 
     async function unban(u, row) {
-      const ok = await confirmDialog('Unban ' + u.first_name + '?', 'They will be able to sign in and use Hingtam again.', 'Unban');
+      const ok = await confirmDialog('Unban ' + u.first_name + '?', 'They will be able to sign in and use Hingtam again, and we will email them to say so.', 'Unban');
       if (!ok) return;
-      const { error } = await sb.functions.invoke('unban-user', { body: { userId: u.user_id } });
+      const { data, error } = await sb.functions.invoke('unban-user', { body: { userId: u.user_id } });
       if (error) { toast('Could not unban. Try again.'); return; }
-      toast(u.first_name + ' has been unbanned'); afterAction(row);
+      toast(u.first_name + ' has been unbanned' + (data && data.emailed === false ? ', but the email to them could not be sent' : ' and emailed'));
+      afterAction(row);
     }
 
     // ---- Routing ----------------------------------------------------------
