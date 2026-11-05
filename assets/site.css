@@ -52,6 +52,7 @@ img{max-width:100%}
 .skip:focus{left:12px}
 .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:13px 22px;font:600 15px var(--body);cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s}
 .btn:hover{transform:translateY(-1px)}
+[hidden]{display:none!important}
 .btn.primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 22px rgba(149,66,238,.35)}
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
 .btn[disabled]{opacity:.6;cursor:default;transform:none}
